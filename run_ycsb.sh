@@ -51,13 +51,14 @@ bin/ycsb.sh load voltdb -P workloads/workloada -P volt.properties
 bin/ycsb.sh load voltdb -P workloads/workloada -P volt.properties
 
 
-MAX_TC=100
-for i in a b c d e
+MAX_TC=25
+#for i in a b c d e
+for i in e
 do
-	        DATAFILE=${HOME}/`date +'%Y%M%d_%H%m'`_${i}.txt
-		echo $LOGFILE
-		HEADER=""
-	TC=5
+	DATAFILE=${HOME}/`date +'%Y%M%d_%H%m'`_${i}.txt
+	echo $LOGFILE
+	HEADER=""
+	TC=1
 	while
 		[ "${TC}" -le "${MAX_TC}" ]
 	do
@@ -77,15 +78,17 @@ do
 		if
 			[ "$HEADER" = "" ]
 		then
-			HEADER=`sh $HOME/gather_stats.sh ${LOGFILE} HDR`
+			HEADER=`sh $HOME/volt-run-ycsb/gather_stats.sh ${LOGFILE} HDR`
 			echo  AMI:TESTNAME:INSTANCE:KFACTOR:CMDLOGGING:DEMONAME:SPH:NODECOUNT:${TC}:$HEADER > $DATAFILE
 		fi 
 
-		BODY=`sh $HOME/gather_stats.sh ${LOGFILE} `
+		BODY=`sh $HOME/volt-run-ycsb/gather_stats.sh ${LOGFILE} `
 		echo ${AMI}:${TNAME}:${ITYPE}:${KFACTOR}:${CMDLOGGING}:${DEMONAME}:${SPH}:${NODECOUNT}:${TC}:$BODY >> $DATAFILE
 
+		sh $HOME/volt-run-ycsb/check_aws_network_limits.sh 
+
 	        sleep 30
-		TC=`expr $TC + 5`
+		TC=`expr $TC + 1`
 	done
 	
 	sleep 300
