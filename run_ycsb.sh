@@ -18,7 +18,8 @@ JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 if 
 	[ ! -d ${JAVA_HOME} ]
 then
-	sudo apt install openjdk-8-jdk
+	sudo apt update
+	sudo apt install -y openjdk-8-jdk
 fi
 
 export JAVA_HOME
@@ -52,8 +53,8 @@ bin/ycsb.sh load voltdb -P workloads/workloada -P volt.properties
 
 
 MAX_TC=25
-#for i in a b c d e
-for i in e
+for i in a b c d e
+#for i in e
 do
 	DATAFILE=${HOME}/`date +'%Y%M%d_%H%m'`_${i}.txt
 	echo $LOGFILE
